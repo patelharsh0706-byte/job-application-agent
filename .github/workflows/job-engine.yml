@@ -21,10 +21,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r job-application-agent/requirements.txt
+          pip install -r requirements.txt
 
       - name: Run engine (send applications + follow-ups)
-        working-directory: job-application-agent
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
@@ -34,7 +33,6 @@ jobs:
           python engine.py
 
       - name: Check replies + mark no_response
-        working-directory: job-application-agent
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
@@ -47,9 +45,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add job-application-agent/state.json \
-                  job-application-agent/jobs.csv \
-                  job-application-agent/results.tsv \
-                  job-application-agent/variants.json
+          git add state.json jobs.csv results.tsv variants.json
           git diff --staged --quiet || git commit -m "engine: daily run $(date -u '+%Y-%m-%d')"
           git push
