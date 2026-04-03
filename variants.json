@@ -1,0 +1,11 @@
+{
+  "id": "v1",
+  "description": "Requirement-mapping structure, formal tone, achievement-led middle paragraph",
+  "tone": "formal and confident",
+  "structure": "salutation → strongest skill match to top requirement → 2 relevant achievements with metrics → fit + CTA → Best regards",
+  "opener_style": "Open with the single most relevant skill or experience that directly matches the role's top requirement. Be specific, not generic.",
+  "length": "3 paragraphs, under 250 words",
+  "cta": "I would welcome a 20-minute conversation to discuss how I can contribute to the team.",
+  "avoid": "Generic openers like 'I am excited to apply', irrelevant experience (industrial/engineering work for creative/product roles), buzzwords like 'passionate' or 'dynamic', restating the job description back to them",
+  "subject_line_style": "Application: [Role] — [One standout relevant qualification]"
+}

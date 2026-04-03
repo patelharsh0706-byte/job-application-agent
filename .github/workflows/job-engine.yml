@@ -1,0 +1,62 @@
+name: Job Application Engine
+
+on:
+  schedule:
+    # Runs daily at 1pm Singapore time (5am UTC)
+    - cron: '0 5 * * *'
+  workflow_dispatch:  # allows manual trigger from GitHub Actions UI
+
+jobs:
+  run-engine:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r job-application-agent/requirements.txt
+
+      - name: Restore resume PDF from secret
+        working-directory: job-application-agent
+        env:
+          RESUME_PDF_BASE64: ${{ secrets.RESUME_PDF_BASE64 }}
+        run: |
+          echo "$RESUME_PDF_BASE64" | base64 -d > Harshkumar_Patel_Resume1.pdf
+
+      - name: Run engine (send applications + follow-ups)
+        working-directory: job-application-agent
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          SENDER_NAME: ${{ secrets.SENDER_NAME }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          python engine.py
+
+      - name: Check replies + mark no_response
+        working-directory: job-application-agent
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          SENDER_NAME: ${{ secrets.SENDER_NAME }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          python orchestrator.py --check
+
+      - name: Commit updated state back to repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add job-application-agent/state.json \
+                  job-application-agent/jobs.csv \
+                  job-application-agent/results.tsv \
+                  job-application-agent/variants.json
+          git diff --staged --quiet || git commit -m "engine: daily run $(date -u '+%Y-%m-%d')"
+          git push

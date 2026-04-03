@@ -1,0 +1,142 @@
+Company: EPOS Pte Ltd
+Role: EPOS Pte Ltd – AI Product Manager Intern
+Source: https://www.internsg.com/job/epos-pte-ltd-ai-product-manager-intern/
+
+Skip to content
+Home
+For JobSeekers
+For Employers
+Latest Internships / Jobs
+Community
+About Us
+HomeJobs ListingJob ID: 265666
+EPOS Pte Ltd – AI Product Manager Intern
+Company
+EPOS Pte Ltd
+epos.com.sg
+Designation
+AI Product Manager Intern
+Date Listed
+26 Mar 2026
+Job Type
+Entry Level / Junior Executive
+Intern/TS
+Job Period
+Immediate Start, For At Least 3 Months
+Profession
+IT / Information Technology
+Industry
+Computer and IT
+Location Name
+Tiong Bahru Road, Redhill MRT Station (EW18), Singapore
+Address
+920 Tiong Bahru Rd, Singapore 158792
+Allowance / Remuneration
+$800 - 1,500 monthly
+Discover more
+Social media marketing
+Employment resources
+Professional headshot photography
+Company Profile
+About EPOS
+Backed by Ant International (a global leader in digital payments, digitisation, and financial technology solutions), EPOS is a leading Point-of-Sale (POS) digital solutions provider.
+Supporting Ant International's mission to empower SMEs, EPOS serves as the central hub of its global merchant payment services provider, Antom, delivering integrated O2O digital, payment, and banking solutions to SMEs worldwide—empowering Every Point Of Success in their business growth.
+With a growing presence across Southeast Asia, we’re looking for passionate individuals to join our diverse and driven teams. Be part of our journey as we expand to create meaningful, impactful changes for businesses around the world.
+Job Description
+Role Overview
+We are looking for an AI Product Manager Intern to support the design, analysis, and optimisation of AI-driven product experiences. You will work on LLM-powered features (e.g., conversational flows, automated follow-ups, internal copilots) and contribute to data-driven product decisions.
+This role blends product thinking, analytics, and hands-on work with AI systems.
+Key Responsibilities
+1) Product Analytics & Performance
+Analyse product and user data to identify drop-offs, trends, and opportunities
+Define and track key metrics (activation, conversion, retention, task success)
+Build simple dashboards/reports to monitor product performance
+2) AI Conversation Design & Evaluation
+Design conversation flows for AI assistants (e.g., onboarding, support, follow-ups)
+Evaluate conversations using metrics such as response accuracy, resolution rate, and user engagement
+Iterate on flows based on observed user behaviour and edge cases
+3) Experimentation & Execution
+Support A/B testing of AI flows, messaging, and product changes
+Document hypotheses, experiment design, and results
+Work with engineers/designers to implement and iterate quickly
+4) Prompt Engineering & LLM Optimization
+Develop and refine prompts for specific use cases (e.g., sales follow-ups, support responses)
+Implement guardrails (tone, scope control, fallback handling)
+Test prompt variations and document performance differences
+5) Reporting & Stakeholder Communication
+Prepare clear, structured performance reports and presentations for management
+Translate data into actionable product recommendations
+Support weekly reviews and experiment readouts
+Required Skills
+AI / Product (Important)
+Basic understanding of LLMs and prompt design
+Familiarity with chatbot / conversational UX principles
+Ability to evaluate AI outputs critically (accuracy, tone, relevance)
+Proficiency in Excel / Google Sheets (pivot tables, basic transformations)
+Preferred Skills
+Data Analysis
+Data analytics experience with structured and/or unstructured (conversational) data analysis
+Tools: Python, SQL, R, PostHog, GA4, or similar analytics tools
+AI Automation Exposure
+Exposure to no-code/low-code tools: Zapier, n8n, make.com or similar analytics tools
+Basic familiarity with APIs or data flows
+Design & Communication
+Ability to create clear PowerPoint/Slides presentations
+Basic UX/UI understanding (user flows, wireframes)
+Application Instructions
+Please apply for this position by submitting your text CV using InternSG.
+Kindly note that only shortlisted candidates will be notified.
+Apply for this position
+Related Job Searches:
+Company:
+Designation:
+Profession:
+Industry:
+Location:
+Bukit Merah
+Discuss this Job:
+You can discuss this job on Clublance.com #career-jobs channel, or chat with other community members for free:
+Share This Page
+← Previous Job Listing
+Next Job Listing →
+Programming
+Web Design & Development
+Machine Learning & Artificial Intelligence
+Design
+Communication
+Communications & Media Studies
+families
+Job board
+Find our latest list of curated internships on:
+Facebook, Twitter, or Telegram!
+Facebook
+Twitter
+Telegram
+Connect with peers and learn more about opportunities on:
+Clublance - Singapore's Interns, Freelancers & Entrepreneurs Community
+Interview preparation
+Business attire clothing
+Student employment services
+Work experience tips
+Networking event tickets
+Jobseeker FAQs
+Travel Guides & Travelogues
+LinkedIn premium subscriptions
+Related Posts:
+27 Mar
+Snaphunt Pte Ltd - Technical Product Manager
+09 Mar
+New Balance Singapore Pte Ltd - Marketing and Product Merchandising Intern
+13 Mar
+Horizon Labs - Product Analyst Intern
+Horizon Labs - Product Marketing Intern
+Horizon Labs - AI Product Management Intern
+Allied Container Group - Product Designer Intern
+18 Mar
+BW LPG Product Services Pte Ltd - Commercial Desk Intern
+23 Mar
+Mandai X - Product Intern (Summer Break)
+FlocCare Pte Ltd - Product Growth Intern
+30 Mar
+Gepower Technology Pte Ltd - Hardware Engineer Intern (Product Development Focused/AutoCAD)
+Copyright © 2026 INTERNSG | Terms and Conditions of Use | Privacy Policy
