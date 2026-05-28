@@ -11,9 +11,9 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-import cover_letter
+from core import cover_letter
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def main():
     job_id = sys.argv[1] if len(sys.argv) > 1 else "job_001"

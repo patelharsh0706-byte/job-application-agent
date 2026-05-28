@@ -1,15 +1,23 @@
-# Environment variables — NEVER commit this
+# Secrets
 .env
 
-# Resume PDF — keep local only
+# Personal / private data
 *.pdf
+resume_base64.txt
 
-# Logs
-*.log
+# Runtime data — pipeline state and personal contact info
+jobs.csv
+hr_emails.csv
+ncs_hr_contacts.csv
+matched_jobs.csv
+scraped_jobs.csv
+state.json
+results.tsv
+job_descriptions/
+program.md
 
 # macOS
 .DS_Store
-job_descriptions/.DS_Store
 
 # Python
 __pycache__/

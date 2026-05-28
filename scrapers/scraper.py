@@ -19,7 +19,7 @@ import re
 import time
 from playwright.async_api import async_playwright
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JOBS_CSV = os.path.join(BASE_DIR, "jobs.csv")
 JD_DIR = os.path.join(BASE_DIR, "job_descriptions")
 

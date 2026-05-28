@@ -1,7 +1,8 @@
 {
-  "applicant_name": "Harshkumar Patel",
-  "resume_path": "/Users/hkp/Sales Agent/job-application-agent/Harshkumar_Patel_Resume1.pdf",
-  "sender_email": "harsh.patel502@gmail.com",
+  "applicant_name": "Your Name",
+  "resume_path": "/path/to/your/resume.pdf",
+  "sender_email": "you@gmail.com",
+  "contact_line": "+XX XXXXXXXX | you@gmail.com",
   "batch_size": 20,
   "follow_up_delay_days": 3,
   "eval_window_days": 5,

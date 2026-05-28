@@ -15,9 +15,9 @@ from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 load_dotenv()  # loads .env locally; no-op in GitHub Actions (uses secrets instead)
 
-import cover_letter
-import email_client
-import generate_variant
+from core import cover_letter
+from core import email_client
+from core import generate_variant
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -138,6 +138,7 @@ def phase_sending(config: dict, variant: dict, state: dict) -> dict:
                 job=job,
                 resume_text=resume_text,
                 applicant_name=config["applicant_name"],
+                contact_line=config.get("contact_line", ""),
             )
             result = email_client.send_application(
                 to_email=job["contact_email"],
@@ -204,6 +205,7 @@ def phase_follow_up(config: dict, state: dict) -> dict:
             generated = cover_letter.generate_consolidated_follow_up(
                 jobs=email_jobs,
                 applicant_name=config["applicant_name"],
+                contact_line=config.get("contact_line", ""),
             )
             result = email_client.send_plain(
                 to_email=email,

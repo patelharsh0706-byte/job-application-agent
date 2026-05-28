@@ -34,6 +34,7 @@ def generate_cover_letter(
     job: dict,
     resume_text: str,
     applicant_name: str,
+    contact_line: str = "",
 ) -> dict:
     """
     Call OpenAI API to generate a personalized cover letter for a single job.
@@ -81,7 +82,7 @@ Job Description:
 2. Blank line
 3. Full cover letter body following the structure above
 4. Do NOT use placeholders — use real names, real companies, real achievements from the resume
-5. Sign off exactly as: "Best regards,\\n\\n{applicant_name}\\n+65 89036674 | harsh.patel502@gmail.com"
+5. Sign off exactly as: "Best regards,\\n\\n{applicant_name}\\n{contact_line}"
 
 Output format:
 SUBJECT: <subject line>
@@ -93,7 +94,7 @@ Dear Hiring Manager,
 Best regards,
 
 {applicant_name}
-+65 89036674 | harsh.patel502@gmail.com
+{contact_line}
 """
 
     client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
@@ -111,6 +112,7 @@ def generate_follow_up(
     job: dict,
     applicant_name: str,
     original_subject: str,
+    contact_line: str = "",
 ) -> dict:
     """
     Generate a short, non-pushy follow-up email for an application sent 3 days ago.
@@ -134,7 +136,7 @@ Requirements:
   Best regards,
 
   {applicant_name}
-  +65 89036674 | harsh.patel502@gmail.com
+  {contact_line}
 
 Output format:
 SUBJECT: Re: {original_subject}
@@ -146,7 +148,7 @@ Dear Hiring Manager,
 Best regards,
 
 {applicant_name}
-+65 89036674 | harsh.patel502@gmail.com
+{contact_line}
 """
 
     client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
@@ -163,6 +165,7 @@ Best regards,
 def generate_consolidated_follow_up(
     jobs: list[dict],
     applicant_name: str,
+    contact_line: str = "",
 ) -> dict:
     """
     Generate ONE follow-up email for multiple roles at the same company/email.
@@ -199,7 +202,7 @@ Requirements:
   Best regards,
 
   {applicant_name}
-  +65 89036674 | harsh.patel502@gmail.com
+  {contact_line}
 
 Output format:
 SUBJECT: {subject_line}
@@ -211,7 +214,7 @@ Dear Hiring Manager,
 Best regards,
 
 {applicant_name}
-+65 89036674 | harsh.patel502@gmail.com
+{contact_line}
 """
 
     client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
