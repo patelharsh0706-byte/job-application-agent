@@ -1,0 +1,13 @@
+[project]
+name = "email-outreach-optimizer"
+version = "0.1.0"
+description = "Autonomous cold email optimizer — iterates on copy to maximize reply rate"
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=0.40.0",
+    "requests>=2.31.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

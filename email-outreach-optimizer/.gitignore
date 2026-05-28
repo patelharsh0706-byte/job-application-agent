@@ -1,0 +1,17 @@
+# Secrets
+.env
+
+# Private data — prospect list and runtime state
+prospects.csv
+state.json
+program.md
+
+# Results are local-only (not overwritten by CI)
+results.tsv
+orchestrator_log.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/

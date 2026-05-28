@@ -1,0 +1,74 @@
+name: Email Outreach Optimizer
+
+on:
+  schedule:
+    - cron: "0 * * * *"   # every hour, on the hour
+  workflow_dispatch:        # allow manual trigger from GitHub UI
+
+permissions:
+  contents: write           # needed to commit state.json + variants.json back
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install anthropic requests
+
+      - name: Run optimizer engine
+        env:
+          # ----------------------------------------------------------------
+          # Email provider — set to "purands", "sendgrid", or "smtp"
+          # ----------------------------------------------------------------
+          EMAIL_PROVIDER: ${{ secrets.EMAIL_PROVIDER }}
+
+          # Sender identity (used in email signatures)
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          SENDER_NAME: ${{ secrets.SENDER_NAME }}
+          SENDER_TITLE: ${{ secrets.SENDER_TITLE }}
+          SENDER_COMPANY: ${{ secrets.SENDER_COMPANY }}
+
+          # ----------------------------------------------------------------
+          # Purands API (fill in when credentials are available)
+          # ----------------------------------------------------------------
+          PURANDS_API_KEY: ${{ secrets.PURANDS_API_KEY }}
+          PURANDS_API_URL: ${{ secrets.PURANDS_API_URL }}
+
+          # ----------------------------------------------------------------
+          # SMTP fallback (optional — only needed if EMAIL_PROVIDER=smtp)
+          # ----------------------------------------------------------------
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          IMAP_HOST: ${{ secrets.IMAP_HOST }}
+          IMAP_USER: ${{ secrets.IMAP_USER }}
+          IMAP_PASSWORD: ${{ secrets.IMAP_PASSWORD }}
+
+          # ----------------------------------------------------------------
+          # Claude API (for generating next variant)
+          # ----------------------------------------------------------------
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+        run: python engine.py
+
+      - name: Commit updated state
+        run: |
+          git config user.name  "email-optimizer[bot]"
+          git config user.email "email-optimizer[bot]@users.noreply.github.com"
+          git add state.json variants.json
+          # Only commit if something changed
+          git diff --cached --quiet || git commit -m "chore: hourly optimizer run [$(date -u '+%Y-%m-%d %H:%M UTC')]"
+          git push

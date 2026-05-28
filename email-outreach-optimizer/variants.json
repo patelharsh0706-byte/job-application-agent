@@ -1,0 +1,14 @@
+{
+  "variant_id": "v1",
+  "description": "baseline — trigger event opener, Woohoo Pets anchor, low-friction CTA",
+  "subject": "Woohoo Pets' 65% support cost drop — what that signals about your next vertical",
+  "body": "Hi {{first_name}},\n\nNoticed {{company}} reclassified its business activity in December 2024 — from software development to retail. That kind of shift usually signals a deliberate go-to-market decision, not just a filing formality.\n\nThe Woohoo Pets result (65% support cost reduction) suggests you've cracked something real.\n\nI'd like to send you a short competitive positioning note — no strings — on how the WhatsApp retention space in SEA is consolidating around 2–3 players. Useful or not useful, it's yours in 24 hours.\n\nWorth it?\n\n{{sender_name}}\n{{sender_title}} | {{sender_company}}",
+  "personalization_variables": [
+    "first_name",
+    "company",
+    "sender_name",
+    "sender_title",
+    "sender_company"
+  ],
+  "notes": "Opens with ACRA registry trigger event. Reflects their own published metric back at them. CTA is a free deliverable, not a meeting request. Closes with binary 'Worth it?' question."
+}
