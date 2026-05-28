@@ -1,27 +1,56 @@
 # Job Application Agent
 
-An automated job application system that finds relevant roles on LinkedIn, writes personalised cover letters using OpenAI, sends them via Gmail, follows up automatically, and A/B tests email variants to improve reply rates over time.
+Finds HR contacts at target companies using LinkedIn, Apify, and Hunter.io — then passes the enriched contact list to the Email Outreach Optimizer to send personalized applications and follow-ups.
 
-Built to automate my own job search while studying at NUS — applies AI across scraping, personalisation, and A/B testing to turn job hunting into a measurable, self-improving system.
+Built while studying at NUS to automate my own job search using AI tools across scraping, enrichment, and outreach.
 
 ---
 
-## How It Works
-
-The engine runs a 4-phase loop:
+## What It Does
 
 ```
-SENDING → FOLLOW_UP → COLLECTING → EVALUATING → (repeat)
+LinkedIn Search → Apify Scrape → Hunter.io Enrichment → HR Contact List
 ```
 
-| Phase | What happens |
-|-------|-------------|
-| **SENDING** | Generates a personalised cover letter for each pending job and sends it via Gmail with your resume attached |
-| **FOLLOW_UP** | 3 days later, sends a consolidated follow-up to any contacts that haven't replied |
-| **COLLECTING** | Waits 5 days for replies; you check Gmail daily with the orchestrator |
-| **EVALUATING** | Measures the reply rate for the current email variant, logs the result, then uses OpenAI to generate an improved variant for the next batch |
+| Step | Tool | Output |
+|------|------|--------|
+| **1. Search** | LinkedIn People/Jobs Search URL | List of target profiles and companies |
+| **2. Scrape** | Apify (`powerai/linkedin-peoples-search-scraper`) | Names, titles, LinkedIn URLs |
+| **3. Enrich** | Hunter.io domain search (HR department filter) | Verified HR email addresses |
+| **4. Export** | `hr_emails.csv` / `ncs_hr_contacts.csv` | Ready-to-use contact list for outreach |
 
-Each cycle teaches the system what email style actually gets responses.
+The enriched contact list feeds directly into the **Email Outreach Optimizer** for automated sending, follow-ups, and reply tracking.
+
+---
+
+## Pipeline Overview
+
+```mermaid
+flowchart TD
+    A[LinkedIn Search URL] --> B[Apify Scraper\npowerai/linkedin-peoples-search-scraper]
+    B --> C[Hunter.io Enrichment\nHR department filter by domain]
+    C --> D[hr_emails.csv\nName · Title · Verified Email]
+    D --> E[Email Outreach Optimizer]
+    E --> F[Send Personalized Email]
+    F --> G[Follow Up after 48h]
+    G --> H{Reply received?}
+    H -- Yes --> I[Mark replied\nLog reply rate]
+    H -- No --> J[Mark no response]
+    I --> K[Claude reconstructs\nnext email variant]
+    J --> K
+    K --> F
+```
+
+---
+
+## Tools Used
+
+| Tool | Purpose |
+|------|---------|
+| **LinkedIn** | Source of HR/hiring manager profiles |
+| **Apify** | Scrapes LinkedIn search results (bypasses auth wall) |
+| **Hunter.io** | Enriches company domains → verified HR email addresses |
+| **OpenAI GPT-4o** | Scores job-resume fit (1–10) to filter relevant roles |
 
 ---
 
@@ -35,19 +64,17 @@ pip install -r requirements.txt
 
 ### 2. Configure `.env`
 
-Create a `.env` file (see `.env.example`):
-
 ```env
-OPENAI_API_KEY=sk-...
 APIFY_API_KEY=apify_api_...
-SENDER_EMAIL=you@gmail.com
-SENDER_NAME=Your Name
-GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx
 hunter_api_key=...
-LINKEDIN_COOKIE=AQE...   # li_at cookie from browser
+LINKEDIN_COOKIE=AQE...        # li_at cookie from your browser (F12 → Application → Cookies)
+OPENAI_API_KEY=sk-...
+SENDER_EMAIL=you@gmail.com
+GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx
 ```
 
-**Gmail App Password:** Go to myaccount.google.com → Security → 2-Step Verification → App Passwords.
+**LinkedIn Cookie:** Open LinkedIn in Chrome → F12 → Application → Cookies → copy `li_at` value.  
+**Gmail App Password:** myaccount.google.com → Security → 2-Step Verification → App Passwords.
 
 ### 3. Configure `config.json`
 
@@ -56,11 +83,10 @@ LINKEDIN_COOKIE=AQE...   # li_at cookie from browser
   "applicant_name": "Your Name",
   "resume_path": "/absolute/path/to/resume.pdf",
   "sender_email": "you@gmail.com",
+  "contact_line": "+XX XXXXXXXX | you@gmail.com",
   "batch_size": 20,
   "follow_up_delay_days": 3,
-  "eval_window_days": 5,
-  "email_provider": "gmail",
-  "follow_up_subject_prefix": "Following up — "
+  "eval_window_days": 5
 }
 ```
 
@@ -68,54 +94,40 @@ LINKEDIN_COOKIE=AQE...   # li_at cookie from browser
 
 ## Usage
 
-### Step 1 — Find jobs
+### Step 1 — Scrape HR contacts from a LinkedIn people search
 
-Scrapes LinkedIn for matching roles, scores each against your resume (GPT-4o-mini), and saves qualifying jobs to `jobs.csv`:
+Paste any LinkedIn people search URL into `scrape_ncs_hr.py` and run:
 
 ```bash
-python3 scrapers/linkedin_scraper.py
+python3 scrapers/scrape_ncs_hr.py
 ```
 
-### Step 2 — Run the engine (daily)
+Output: `ncs_hr_contacts.csv` with names, titles, LinkedIn URLs, and enriched emails.
 
-Executes whichever phase the system is currently in:
+### Step 2 — Scrape LinkedIn jobs and find HR emails (bulk)
 
 ```bash
-python3 engine.py
+python3 scrapers/linkedin_scraper.py   # scrape jobs → score against resume → save to jobs.csv
+python3 scrapers/find_hr_emails.py     # enrich all companies in scraped_jobs.csv via Hunter.io
 ```
 
-### Step 3 — Check for replies
-
-Scans Gmail for replies and updates job statuses. Run this daily during the COLLECTING phase:
+### Step 3 — Preview emails before sending
 
 ```bash
-python3 orchestrator.py --check
+python3 utils/preview.py              # preview generated cover letter
+python3 utils/preview_followup.py     # preview follow-up email
 ```
 
-### View dashboard
+### Step 4 — Run the outreach engine
+
+Once the contact list is ready, the Email Outreach Optimizer takes over:
 
 ```bash
-python3 orchestrator.py
-```
-
-### Preview emails before sending
-
-```bash
-python3 utils/preview.py          # preview cover letters
-python3 utils/preview_followup.py # preview follow-up emails
-```
-
-### Mark a job as replied manually
-
-```bash
+# Pass hr_emails.csv to the Email Outreach Optimizer as prospects.csv
+python3 engine.py                     # send, follow up, evaluate
+python3 orchestrator.py               # view dashboard
+python3 orchestrator.py --check       # scan Gmail for replies
 python3 orchestrator.py --mark-replied job_007
-```
-
-### Find HR emails for a specific company
-
-```bash
-python3 scrapers/scrape_ncs_hr.py    # company-specific HR contacts via Apify + Hunter.io
-python3 scrapers/find_hr_emails.py   # HR emails for all scraped companies via Hunter.io
 ```
 
 ---
@@ -126,30 +138,30 @@ python3 scrapers/find_hr_emails.py   # HR emails for all scraped companies via H
 job-application-agent/
 ├── README.md
 ├── requirements.txt
-├── config.json                      # Applicant config (name, resume path, batch size)
-├── variants.json                    # Active email style template
+├── config.json                      # Your name, resume path, batch size, contact line
+├── variants.json                    # Active email variant (tone, structure, CTA)
 ├── .env.example
 ├── .gitignore
 │
-├── engine.py                        # State machine — run daily
-├── orchestrator.py                  # Dashboard + reply checker
+├── engine.py                        # Outreach state machine — run daily
+├── orchestrator.py                  # Dashboard + Gmail reply checker
 │
 ├── core/                            # Email generation & sending
-│   ├── cover_letter.py              # AI cover letter generator (OpenAI)
-│   ├── email_client.py              # Gmail sender
+│   ├── cover_letter.py              # AI cover letter generator (OpenAI GPT-4o)
+│   ├── email_client.py              # Gmail sender (SMTP + attachment)
 │   └── generate_variant.py          # A/B variant generator (OpenAI)
 │
-├── scrapers/                        # Job discovery & HR enrichment
-│   ├── linkedin_scraper.py          # LinkedIn job search via Apify + resume scoring
-│   ├── scraper.py                   # Base scraper
-│   ├── scrape_only.py               # Scrape without scoring
-│   ├── score_and_enrich.py          # Score scraped jobs + enrich with HR emails
-│   ├── find_hr_emails.py            # HR email lookup via Hunter.io (bulk)
-│   └── scrape_ncs_hr.py             # Company-specific HR contact scraper
+├── scrapers/                        # LinkedIn scraping & HR email enrichment
+│   ├── linkedin_scraper.py          # LinkedIn job search via Apify → score vs resume
+│   ├── scrape_ncs_hr.py             # LinkedIn people search → Apify → Hunter.io
+│   ├── find_hr_emails.py            # Bulk Hunter.io enrichment for all scraped companies
+│   ├── score_and_enrich.py          # Score scraped jobs + attach HR emails
+│   ├── scraper.py                   # Base Apify scraper
+│   └── scrape_only.py               # Scrape without scoring
 │
 └── utils/                           # Dev tools
-    ├── preview.py                   # Preview cover letters in terminal
-    ├── preview_followup.py          # Preview follow-up emails in terminal
+    ├── preview.py                   # Preview cover letters in terminal (no send)
+    ├── preview_followup.py          # Preview follow-up emails in terminal (no send)
     └── gmail_mcp_helper.py          # Gmail MCP integration helper
 ```
 
@@ -164,6 +176,18 @@ job-application-agent/
 
 ---
 
+## Output Files
+
+| File | Contents |
+|------|---------|
+| `hr_emails.csv` | Enriched HR contacts for all scraped companies |
+| `ncs_hr_contacts.csv` | HR contacts for a specific company search |
+| `jobs.csv` | Tracked job applications with status, timestamps, reply flags |
+| `scraped_jobs.csv` | Raw Apify scrape output before scoring |
+| `matched_jobs.csv` | Scored and filtered jobs (score ≥ threshold) |
+
+---
+
 ## Job Statuses
 
 | Status | Meaning |
@@ -171,20 +195,13 @@ job-application-agent/
 | `pending` | Queued, not yet sent |
 | `sent` | Application sent, awaiting follow-up window |
 | `followed_up` | Follow-up sent, waiting for reply |
-| `replied` | Company replied |
+| `replied` | HR replied |
 | `no_response` | No reply after follow-up + 5 days |
 | `bounced` | Email address invalid |
-| `rejected` | Explicit rejection received |
+| `rejected` | Explicit rejection |
 
 ---
 
-## A/B Testing
+## Related Project
 
-Each batch of applications uses one email `variant` (tone, structure, opener style, CTA). After the eval window:
-
-- Reply rate ≥ 5% → variant marked `keep`
-- Reply rate < 5% → variant marked `discard`
-
-OpenAI then generates the next variant, informed by what has and hasn't worked. Results are logged to `results.tsv`.
-
-Current variant config lives in `variants.json` and controls tone, structure, opener style, length, subject line format, and phrases to avoid.
+The HR contact list produced here feeds directly into the **[Email Outreach Optimizer](../Email-outreach-optimizer)** — which handles sending, follow-ups, reply tracking, and self-improving email variants.
