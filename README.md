@@ -9,6 +9,24 @@ Built while studying at NUS to automate my own job search using AI tools across 
 
 ---
 
+## Inspiration — Karpathy's Autoresearch
+
+The Email Outreach Optimizer is directly modelled on [Andrej Karpathy's autoresearch framework](https://github.com/karpathy/autoresearch), which autonomously iterates on neural network architecture to minimize validation loss.
+
+The same loop applies to cold email copy — instead of a GPU minimizing loss, **Claude minimizes poor reply rate** by iterating on email variants one controlled change at a time:
+
+| Autoresearch | Email Outreach Optimizer |
+|---|---|
+| Model architecture | Email variant (subject + body + CTA) |
+| Training run (~5 min) | Email batch + 48-hour reply window |
+| Validation loss (lower = better) | Reply rate (higher = better) |
+| One architecture change per run | One copy change per run (subject / opener / CTA) |
+| GPU compute budget | Prospect list budget |
+| Next hypothesis via search | Next hypothesis via Claude |
+| `results.tsv` experiment log | `results.tsv` experiment log |
+
+---
+
 ## How the Two Parts Connect
 
 ```mermaid
